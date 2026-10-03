@@ -1,0 +1,19 @@
+services:
+  timeline:
+    build: .
+    image: incident-timeline:latest
+    container_name: incident-timeline
+    # 可配置项（均有默认值，可按需覆盖）：
+    environment:
+      PORT: "8800"            # 容器内监听端口
+      HOST: "0.0.0.0"
+      DB_PATH: /data/timeline.db
+      SEED_DEMO: "1"          # 1=首次启动写入一条示例复盘；0=空库启动
+    ports:
+      - "8800:8800"           # 宿主机端口:容器端口，左侧可自行修改
+    volumes:
+      - timeline-data:/data   # SQLite 数据库持久化
+    restart: unless-stopped
+
+volumes:
+  timeline-data:

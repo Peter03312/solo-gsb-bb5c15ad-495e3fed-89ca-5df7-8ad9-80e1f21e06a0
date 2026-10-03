@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>事故复盘时间线</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">🛡 事故复盘时间线 <span class="sub">本地协作 · 时间窗推算 · 依据链留痕</span></div>
+  <div class="top-actions">
+    <input id="author" class="input author" placeholder="你的名字（可选）"
+           title="随保存记录的编辑人">
+    <button class="btn" id="btn-new-retro">＋ 新建复盘</button>
+  </div>
+</header>
+
+<main class="layout">
+  <!-- 左：复盘列表 -->
+  <aside class="sidebar">
+    <h2>复盘列表</h2>
+    <ul id="retro-list" class="retro-list"></ul>
+    <div class="sidebar-hint">每次保存生成新版本；旧版本提交会被拒绝。</div>
+  </aside>
+
+  <!-- 中：编辑区 -->
+  <section class="editor" id="editor" hidden>
+    <div class="retro-head">
+      <input id="retro-name" class="input retro-name" spellcheck="false">
+      <div class="version-meta">
+        <span id="version-badge" class="badge"></span>
+        <span id="final-badge" class="badge badge-final" hidden>已定稿</span>
+        <span id="saved-at" class="muted"></span>
+      </div>
+      <div class="head-actions">
+        <button class="btn btn-ghost" id="btn-history">历史版本</button>
+        <button class="btn btn-primary" id="btn-save">💾 保存为新版本</button>
+        <button class="btn btn-success" id="btn-finalize">🔒 定稿当前版本</button>
+        <button class="btn btn-danger-ghost" id="btn-delete">删除复盘</button>
+      </div>
+    </div>
+
+    <div id="conflict-banner" class="banner banner-conflict" hidden></div>
+    <div id="draft-banner" class="banner banner-draft" hidden></div>
+
+    <div class="panels">
+      <!-- 事件原始输入 -->
+      <div class="panel">
+        <h3>① 事件与原始时间输入 <span class="hint">范围 + 持续分钟数</span></h3>
+        <table class="grid" id="events-table">
+          <thead>
+            <tr>
+              <th class="col-title">事件</th>
+              <th>最早开始</th>
+              <th>最晚开始</th>
+              <th>持续(分)</th>
+              <th class="col-state">状态</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="events-tbody"></tbody>
+        </table>
+        <button class="btn btn-ghost btn-block" id="btn-add-event">＋ 添加事件</button>
+      </div>
+
+      <!-- 先于关系 -->
+      <div class="panel">
+        <h3>② 「先于」关系 <span class="hint">前一事件须在后一事件开始前结束</span></h3>
+        <table class="grid" id="relations-table">
+          <thead>
+            <tr><th>前一事件（先发生）</th><th></th><th>后一事件</th><th class="col-state">推算状态</th><th></th></tr>
+          </thead>
+          <tbody id="relations-tbody"></tbody>
+        </table>
+        <button class="btn btn-ghost btn-block" id="btn-add-relation">＋ 添加先于关系</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 右：推算结果 -->
+  <aside class="results" id="results" hidden>
+    <div class="results-head">
+      <h3>③ 推算的可行时间窗</h3>
+      <div class="muted small">与原始输入分开保存 · 每次保存重算</div>
+    </div>
+    <div id="gantt-wrap" class="gantt-wrap"></div>
+    <div id="event-cards"></div>
+  </aside>
+</main>
+
+<div id="modal" class="modal" hidden>
+  <div class="modal-card" id="modal-card"></div>
+</div>
+
+<div id="toast" class="toast" hidden></div>
+
+<script src="/app.js"></script>
+</body>
+</html>
